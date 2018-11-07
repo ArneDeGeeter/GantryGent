@@ -1,3 +1,7 @@
+
+# Created by https://www.gitignore.io/api/java
+
+### Java ###
 # Compiled class file
 *.class
 
@@ -21,3 +25,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+# End of https://www.gitignore.io/api/java
+*.xml
+*.class
+*.class
+.idea/workspace.xml
+out/production/Labo2/be/kul/gantry/domain/Main.class
+*.xml___jb_tmp___
+*.xml
