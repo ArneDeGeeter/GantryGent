@@ -95,14 +95,14 @@ public class Gantry {
 
     public double moveGantry(Coordinaat coord) {
         double movingTime = calculateTime(coord);
-        this.startX = coord.getX() * 10 + 5;
-        this.startY = coord.getY() * 10 + 5;
+        this.startX = coord.xValue();
+        this.startY = coord.yValue();
         return movingTime;
     }
 
     public double calculateTime(Coordinaat coord) {
-        double xTime = (Math.abs(this.startX - (coord.getX() * 10 + 5)) / xSpeed);
-        double yTime = (Math.abs(this.startY - (coord.getY() * 10 + 5)) / ySpeed);
+        double xTime = (Math.abs(this.startX - (coord.xValue())) / xSpeed);
+        double yTime = (Math.abs(this.startY - (coord.yValue())) / ySpeed);
 
         return xTime > yTime ? xTime : yTime;
     }

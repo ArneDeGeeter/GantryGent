@@ -35,8 +35,8 @@ public class Main {
             e.printStackTrace();
         }
         long curt = System.currentTimeMillis();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j + i <= 10; j++) {
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j + i <= 20; j++) {
                 offsetEdge.add(new Coordinaat(i + 1, j + 1));
                 offsetCenter.add(new Coordinaat(i - 5, j - 5));
             }
@@ -67,6 +67,8 @@ public class Main {
         // outputLog.add(prob.getGantries().get(0).toLog());
         for (Job job : prob.getOutputJobSequence()) {
             if (hashMap.containsKey(job.getItem())) {
+                System.out.println(hashMap.get(job.getItem()));
+                System.out.println(job.getItem());
                 getFromStacked(getStack(hashMap.get(job.getItem())), job.getItem());
                 moveItemToOutput(job.getItem());
             } else {
@@ -141,7 +143,7 @@ public class Main {
                         } else {
                             ArrayList<Item> stackLeft = storage[x - 1][y];
                             ArrayList<Item> stackRight = storage[x + 1][y];
-                            validStack = stackLeft.size() > stack.size() && stackRight.size() > stack.size();
+                            validStack = stackLeft.size() + 1 == stack.size() && stackRight.size() + 1 == stack.size();
 
 
                         }
@@ -191,7 +193,28 @@ public class Main {
                 ArrayList<Item> stack = storage[x][y];
                 System.out.println(stack.size() < (prob.isGeschrankt() ? 2 : 4));
                 System.out.println((prob.isGeschrankt() ? 2 : 4));
-                if (stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                boolean oddEven = (x & 1) == 0; //Even=true odd=False
+                boolean validStack = false;
+                if (prob.isGeschrankt()) {
+                    if (isValidXValue(x - 1) && isValidXValue(x + 1)) {
+                        if (oddEven) {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() == stack.size() && stackRight.size() == stack.size();
+
+
+                        } else {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() + 1 == stack.size() && stackRight.size() + 1 == stack.size();
+
+
+                        }
+                    }
+                } else {
+                    validStack = true;
+                }
+                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -252,6 +275,7 @@ public class Main {
     }
 
     public static ArrayList<Item> getStack(Coordinaat coordinaat) {
+        System.out.println(coordinaat.toString());
         int x;
         int y;
         x = coordinaat.getX();
@@ -295,7 +319,28 @@ public class Main {
             int y = coord.getY() + offsetCenter.get(i).getY();
             if (isValidXValue(x) && isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
-                if (stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                boolean oddEven = (x & 1) == 0; //Even=true odd=False
+                boolean validStack = false;
+                if (prob.isGeschrankt()) {
+                    if (isValidXValue(x - 1) && isValidXValue(x + 1)) {
+                        if (oddEven) {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() == stack.size() && stackRight.size() == stack.size();
+
+
+                        } else {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() + 1 == stack.size() && stackRight.size() + 1 == stack.size();
+
+
+                        }
+                    }
+                } else {
+                    validStack = true;
+                }
+                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -337,6 +382,6 @@ public class Main {
     }
 
     private static boolean isValidXValue(int i) {
-        return i >= 0 && i < 100;
+        return i >= 0 && i < 200;
     }
 }

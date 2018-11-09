@@ -2,7 +2,8 @@ package be.kul.gantry.domain;
 
 import java.util.Objects;
 
-public class Coordinaat implements  Comparable{
+
+public class Coordinaat implements Comparable {
     public int x;
     public int y;
 
@@ -12,8 +13,8 @@ public class Coordinaat implements  Comparable{
     }
 
     public Coordinaat(Slot slot) {
-        this.x=(slot.getCenterX()-5)/10;
-        this.y=(slot.getCenterY()-5)/10;
+        this.x = (slot.getCenterX() - 5) / (Main.prob.isGeschrankt() ? 5 : 10);
+        this.y = (slot.getCenterY() - 5) / (Main.prob.isGeschrankt() ? 5 : 10);
     }
 
     public int getX() {
@@ -30,6 +31,14 @@ public class Coordinaat implements  Comparable{
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int xValue() {
+        return (Main.prob.isGeschrankt() ? (this.x * 5) : (this.x * 10)) + 5;
+    }
+
+    public int yValue() {
+        return this.y * 10 + 5;
     }
 
     @Override
@@ -60,6 +69,6 @@ public class Coordinaat implements  Comparable{
         if (this == o) return 0;
         if (!(o instanceof Coordinaat)) throw new ClassCastException();
         Coordinaat that = (Coordinaat) o;
-        return x*x+y*y-that.x*that.x-that.y*that.y;
+        return x * x + y * y - that.x * that.x - that.y * that.y;
     }
 }
