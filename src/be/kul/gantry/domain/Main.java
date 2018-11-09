@@ -43,7 +43,7 @@ public class Main {
         }
         offsetEdge.sort(null);
         offsetCenter.sort(null);
-        layoutX = prob.isGeschrankt()?(((prob.getMaxX() + prob.getMinX()) / 10)*2):((prob.getMaxX() + prob.getMinX()) / 10);
+        layoutX = prob.isGeschrankt() ? (((prob.getMaxX() + prob.getMinX()) / 10) * 2) : ((prob.getMaxX() + prob.getMinX()) / 10);
         System.out.println(layoutX);
 
         layoutY = prob.getMaxY() / 10;
@@ -56,8 +56,8 @@ public class Main {
         for (Slot s : prob.getSlots()) {
             if (s.getItem() != null && s.getType() == Slot.SlotType.STORAGE) {
 
-                storage[(s.getCenterX() - 5) / (prob.isGeschrankt()?5:10)][(s.getCenterY() - 5) / 10].add(s.getZ(), s.getItem());
-                hashMap.put(s.getItem(), new Coordinaat(((s.getCenterX() - 5) / (prob.isGeschrankt()?5:10)), (s.getCenterY() - 5) / 10));
+                storage[(s.getCenterX() - 5) / (prob.isGeschrankt() ? 5 : 10)][(s.getCenterY() - 5) / 10].add(/*s.getZ(),*/ s.getItem());
+                hashMap.put(s.getItem(), new Coordinaat(((s.getCenterX() - 5) / (prob.isGeschrankt() ? 5 : 10)), (s.getCenterY() - 5) / 10));
             } else if (s.getType() == Slot.SlotType.INPUT) {
                 prob.setInputSlot(s);
             } else if (s.getType() == Slot.SlotType.OUTPUT) {
@@ -128,7 +128,28 @@ public class Main {
             int y = offsetEdge.get(i).getY();
             if (isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
-                if (stack.size() < 4) {
+                boolean oddEven = (x & 1) == 0; //Even=true odd=False
+                boolean validStack = false;
+                if (prob.isGeschrankt()) {
+                    if (isValidXValue(x - 1) && isValidXValue(x + 1)) {
+                        if (oddEven) {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() == stack.size() && stackRight.size() == stack.size();
+
+
+                        } else {
+                            ArrayList<Item> stackLeft = storage[x - 1][y];
+                            ArrayList<Item> stackRight = storage[x + 1][y];
+                            validStack = stackLeft.size() > stack.size() && stackRight.size() > stack.size();
+
+
+                        }
+                    }
+                } else {
+                    validStack = true;
+                }
+                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -168,8 +189,9 @@ public class Main {
             int x = layoutX - offsetEdge.get(i).getX();
             if (isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
-
-                if (stack.size() < 4) {
+                System.out.println(stack.size() < (prob.isGeschrankt() ? 2 : 4));
+                System.out.println((prob.isGeschrankt() ? 2 : 4));
+                if (stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -273,7 +295,7 @@ public class Main {
             int y = coord.getY() + offsetCenter.get(i).getY();
             if (isValidXValue(x) && isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
-                if (stack.size() < 4) {
+                if (stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
