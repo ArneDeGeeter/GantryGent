@@ -64,6 +64,7 @@ public class Main {
                 prob.setOutputSlot(s);
             }
         }
+
         // outputLog.add(prob.getGantries().get(0).toLog());
         for (Job job : prob.getOutputJobSequence()) {
             if (hashMap.containsKey(job.getItem())) {
@@ -117,6 +118,9 @@ public class Main {
     }
 
     private static void moveItemToOutput(Item item) {
+        if (item.getId() == 2591) {
+            System.out.println();
+        }
         moveItem(item, prob.getOutputSlotCoordinaat());
         output.add(item);
 
@@ -184,6 +188,9 @@ public class Main {
 
 
     private static void moveItemCloseToExit(Item item) {
+        if (item.getId() == 2591) {
+            System.out.println();
+        }
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
         for (int i = 0; i < offsetEdge.size(); i++) {
@@ -206,7 +213,7 @@ public class Main {
                         } else {
                             ArrayList<Item> stackLeft = storage[x - 1][y];
                             ArrayList<Item> stackRight = storage[x + 1][y];
-                            validStack = stackLeft.size() + 1 == stack.size() && stackRight.size() + 1 == stack.size();
+                            validStack = stackLeft.size() - 1 == stack.size() && stackRight.size() - 1 == stack.size();
 
 
                         }
@@ -271,6 +278,9 @@ public class Main {
         timer = timer + prob.getPickupPlaceDuration();
         prob.getGantries().get(0).setItem(null);
         //TODO time+log
+        if (item.getId() == 2591) {
+            System.out.println();
+        }
         hashMap.put(item, coord);
     }
 
@@ -332,7 +342,7 @@ public class Main {
                         } else {
                             ArrayList<Item> stackLeft = storage[x - 1][y];
                             ArrayList<Item> stackRight = storage[x + 1][y];
-                            validStack = stackLeft.size() + 1 == stack.size() && stackRight.size() + 1 == stack.size();
+                            validStack = stackLeft.size() - 1 == stack.size() && stackRight.size() - 1 == stack.size();
 
 
                         }
@@ -382,6 +392,6 @@ public class Main {
     }
 
     private static boolean isValidXValue(int i) {
-        return i >= 0 && i < 200;
+        return i >= 0 && i < (prob.isGeschrankt() ? 200 : 100);
     }
 }
