@@ -26,7 +26,7 @@ public class Main {
 
     public static void main(String[] args) {
         hashMap = new HashMap<>();
-        File file = new File("1_10_100_4_FALSE_65_50_50.json");
+        File file = new File("1_10_100_4_TRUE_65_50_50.json");
         try {
             prob = Problem.fromJson(file);
         } catch (IOException e) {
@@ -43,7 +43,9 @@ public class Main {
         }
         offsetEdge.sort(null);
         offsetCenter.sort(null);
-        layoutX = (prob.getMaxX() + prob.getMinX()) / 10;
+        layoutX = prob.isGeschrankt()?(((prob.getMaxX() + prob.getMinX()) / 10)*2):((prob.getMaxX() + prob.getMinX()) / 10);
+        System.out.println(layoutX);
+
         layoutY = prob.getMaxY() / 10;
         storage = new ArrayList[layoutX][layoutY];
         for (int i = 0; i < storage.length; i++) {
@@ -54,8 +56,8 @@ public class Main {
         for (Slot s : prob.getSlots()) {
             if (s.getItem() != null && s.getType() == Slot.SlotType.STORAGE) {
 
-                storage[(s.getCenterX() - 5) / 10][(s.getCenterY() - 5) / 10].add(s.getZ(), s.getItem());
-                hashMap.put(s.getItem(), new Coordinaat(((s.getCenterX() - 5) / 10), (s.getCenterY() - 5) / 10));
+                storage[(s.getCenterX() - 5) / (prob.isGeschrankt()?5:10)][(s.getCenterY() - 5) / 10].add(s.getZ(), s.getItem());
+                hashMap.put(s.getItem(), new Coordinaat(((s.getCenterX() - 5) / (prob.isGeschrankt()?5:10)), (s.getCenterY() - 5) / 10));
             } else if (s.getType() == Slot.SlotType.INPUT) {
                 prob.setInputSlot(s);
             } else if (s.getType() == Slot.SlotType.OUTPUT) {
@@ -77,13 +79,16 @@ public class Main {
                         prob.getInputJobSequence().remove(0);
 
                         job.setFinished(true);
+
+
                     } else if (prob.getOutputJobSequenceItemId().contains(prob.getInputJobSequence().get(0).getItem().getId())) {
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
                         moveItemCloseToExit(prob.getInputJobSequence().get(0).getItem());
                         prob.getInputJobSequence().remove(0);
+
+
                     } else {
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
-
                         moveItemCloseToEntrance(prob.getInputJobSequence().get(0).getItem());
                         prob.getInputJobSequence().remove(0);
 
@@ -269,7 +274,6 @@ public class Main {
             if (isValidXValue(x) && isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
                 if (stack.size() < 4) {
-                    //TODO change order for loop, then change contains method
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 

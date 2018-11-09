@@ -33,11 +33,21 @@ public class Problem {
     private Slot inputSlot;
     private Slot outputSlot;
 
+    public boolean isGeschrankt() {
+        return geschrankt;
+    }
+
+    public void setGeschrankt(boolean geschrankt) {
+        this.geschrankt = geschrankt;
+    }
+
+    private boolean geschrankt;
+
 
     public Problem(int minX, int maxX, int minY, int maxY, int maxLevels,
                    List<Item> items, List<Gantry> gantries, List<Slot> slots,
                    List<Job> inputJobSequence, List<Job> outputJobSequence, List<Integer> inputJobSequenceItemId,
-                   List<Integer> outputJobSequenceItemId, int gantrySafetyDist, int pickupPlaceDuration) {
+                   List<Integer> outputJobSequenceItemId, int gantrySafetyDist, int pickupPlaceDuration, boolean aTrue) {
         this.minX = minX;
         this.maxX = maxX;
         this.minY = minY;
@@ -52,6 +62,7 @@ public class Problem {
         this.outputJobSequenceItemId = new ArrayList<>(outputJobSequenceItemId);
         this.safetyDistance = gantrySafetyDist;
         this.pickupPlaceDuration = pickupPlaceDuration;
+        this.geschrankt = aTrue;
     }
 
     public List<Integer> getInputJobSequenceItemId() {
@@ -314,7 +325,8 @@ public class Problem {
                     inputJobSequenceItemId,
                     outputJobSequenceItemId,
                     safetyDist,
-                    pickupPlaceDuration);
+                    pickupPlaceDuration,
+                    file.getName().contains("TRUE"));
 
         }
 
@@ -342,19 +354,24 @@ public class Problem {
     public void setInputSlot(Slot inputSlot) {
         this.inputSlot = inputSlot;
     }
+
     public void setOutputSlot(Slot outputSlot) {
         this.outputSlot = outputSlot;
     }
-    public Slot getInputSlot(){
+
+    public Slot getInputSlot() {
         return this.inputSlot;
     }
-    public Slot getOutputSlot(){
+
+    public Slot getOutputSlot() {
         return this.outputSlot;
     }
-    public Coordinaat getInputSlotCoordinaat(){
+
+    public Coordinaat getInputSlotCoordinaat() {
         return new Coordinaat(inputSlot);
     }
-    public Coordinaat getOutputSlotCoordinaat(){
+
+    public Coordinaat getOutputSlotCoordinaat() {
         return new Coordinaat(outputSlot);
     }
 }
