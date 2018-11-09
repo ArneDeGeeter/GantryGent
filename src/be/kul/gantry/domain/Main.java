@@ -23,10 +23,14 @@ public class Main {
     static ArrayList<Item> output = new ArrayList<>();
     static ArrayList<String> outputLog = new ArrayList<>();
     public static double timer = 0;
+    public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
-        hashMap = new HashMap<>();
         File file = new File("1_10_100_4_TRUE_65_50_50.json");
+        String outputFileName = "output.txt";
+
+
+        hashMap = new HashMap<>();
         try {
             prob = Problem.fromJson(file);
         } catch (IOException e) {
@@ -70,7 +74,7 @@ public class Main {
             if (hashMap.containsKey(job.getItem())) {
                 System.out.println(hashMap.get(job.getItem()));
                 System.out.println(job.getItem());
-                getFromStacked(getStack(hashMap.get(job.getItem())), job.getItem());
+                getFromStacked(getStack(hashMap.get(job.getItem())), job.getItem(), true);
                 moveItemToOutput(job.getItem());
             } else {
                 while (!job.isFinished()) {
@@ -104,7 +108,7 @@ public class Main {
 
         System.out.println(System.currentTimeMillis() - curt);
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(outputFileName));
             for (String s : outputLog) {
                 bw.write(s + "\n");
             }
@@ -127,6 +131,9 @@ public class Main {
     }
 
     private static void moveItemCloseToEntrance(Item item) {
+        if(item.getId()==2600){
+            System.out.println();
+        }
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
         for (int i = 0; i < offsetEdge.size(); i++) {
@@ -295,15 +302,61 @@ public class Main {
 
     }
 
-    public static void getFromStacked(ArrayList<Item> stacked, Item item) {
+    public static void getFromStacked(ArrayList<Item> stacked, Item item, boolean root) {
         boolean found = false;
-        while (!found) {
-            if (stacked.get(stacked.size() - 1).getId() == item.getId()) {
-                found = true;
+        if(item.getId()==789){
+            System.out.println();
+        }
+        if (prob.isGeschrankt()) {
+            Coordinaat c = hashMap.get(item);
+            boolean oddEven = (c.getX() & 1) == 0; //Even=true odd=False
+
+            if (oddEven) {
+                if (isValidXValue(c.getX() - 1)) {
+                    ArrayList<Item> stack = storage[c.getX() - 1][c.getY()];
+                    System.out.println(stack.toString());
+                    System.out.println(stacked.toString());
+                    System.out.println(item);
+                    if (stack.size() > stacked.indexOf(item)) {
+                        getFromStacked(storage[c.getX() - 1][c.getY()], storage[c.getX() - 1][c.getY()].get(stacked.indexOf(item)), false);
+                    }
+                }
+                if (isValidXValue(c.getX() + 1)) {
+                    ArrayList<Item> stack = storage[c.getX() + 1][c.getY()];
+                    if (stack.size() > stacked.indexOf(item)) {
+                        getFromStacked(storage[c.getX() + 1][c.getY()], storage[c.getX() + 1][c.getY()].get(stacked.indexOf(item)), false);
+                    }
+                }
+                verplaats(item);
             } else {
-                //TODO: Verplaats
-                verplaats(stacked.get(stacked.size() - 1));
-                // stacked.remove(stacked.size() - 1);
+                if (isValidXValue(c.getX() - 1)) {
+                    ArrayList<Item> stack = storage[c.getX() - 1][c.getY()];
+                    if (stack.size() > stacked.indexOf(item)+1) {
+                        getFromStacked(storage[c.getX() - 1][c.getY()], storage[c.getX() - 1][c.getY()].get(stacked.indexOf(item) + 1), false);
+                    }
+                }
+                if (isValidXValue(c.getX() + 1)) {
+                    ArrayList<Item> stack = storage[c.getX() + 1][c.getY()];
+                    System.out.println(stack.toString());
+                    System.out.println(stacked.toString());
+                    System.out.println(item);
+                    if (stack.size() > stacked.indexOf(item)+1) {
+                        getFromStacked(storage[c.getX() + 1][c.getY()], storage[c.getX() + 1][c.getY()].get(stacked.indexOf(item) + 1), false);
+                    }
+                }
+                if (!root) {
+                    verplaats(item);
+                }
+            }
+        } else {
+            while (!found) {
+                if (stacked.get(stacked.size() - 1).getId() == item.getId()) {
+                    found = true;
+                } else {
+                    //TODO: Verplaats
+                    verplaats(stacked.get(stacked.size() - 1));
+                    // stacked.remove(stacked.size() - 1);
+                }
             }
         }
         //TODO: Verplaats naar output
@@ -320,65 +373,72 @@ public class Main {
     }
 
     private static ArrayList<Item> findNearestStack(Coordinaat coord, Item item) {
+        if (item.getId() == 2008) {
+            System.out.println();
+        }
         boolean found = false;
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
 
         for (int i = 1; i < offsetCenter.size(); i++) {
-            int x = coord.getX() + offsetCenter.get(i).getX();
-            int y = coord.getY() + offsetCenter.get(i).getY();
-            if (isValidXValue(x) && isValidYValue(y)) {
-                ArrayList<Item> stack = storage[x][y];
-                boolean oddEven = (x & 1) == 0; //Even=true odd=False
-                boolean validStack = false;
-                if (prob.isGeschrankt()) {
-                    if (isValidXValue(x - 1) && isValidXValue(x + 1)) {
-                        if (oddEven) {
-                            ArrayList<Item> stackLeft = storage[x - 1][y];
-                            ArrayList<Item> stackRight = storage[x + 1][y];
-                            validStack = stackLeft.size() == stack.size() && stackRight.size() == stack.size();
+            if (offsetCenter.get(i).getY() != 0) {
+                int x = coord.getX() + offsetCenter.get(i).getX();
+                //TODO CHECK IF OFFSETCENTER X IS 0
+                int y = coord.getY() + offsetCenter.get(i).getY();
+                if (isValidXValue(x) && isValidYValue(y)) {
+                    ArrayList<Item> stack = storage[x][y];
+                    boolean oddEven = (x & 1) == 0; //Even=true odd=False
+                    boolean validStack = false;
+
+                    if (prob.isGeschrankt()) {
+                        if (isValidXValue(x - 1) && isValidXValue(x + 1)) {
+                            if (oddEven) {
+                                ArrayList<Item> stackLeft = storage[x - 1][y];
+                                ArrayList<Item> stackRight = storage[x + 1][y];
+                                validStack = stackLeft.size() == stack.size() && stackRight.size() == stack.size();
 
 
-                        } else {
-                            ArrayList<Item> stackLeft = storage[x - 1][y];
-                            ArrayList<Item> stackRight = storage[x + 1][y];
-                            validStack = stackLeft.size() - 1 == stack.size() && stackRight.size() - 1 == stack.size();
+                            } else {
+                                ArrayList<Item> stackLeft = storage[x - 1][y];
+                                ArrayList<Item> stackRight = storage[x + 1][y];
+                                validStack = stackLeft.size() - 1 == stack.size() && stackRight.size() - 1 == stack.size();
 
-
-                        }
-                    }
-                } else {
-                    validStack = true;
-                }
-                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
-                    boolean containsOutputItems = false;
-                    int highestValueInStack = Integer.MIN_VALUE;
-
-                    for (int j = stack.size() - 1; j >= 0; j--) {
-                        if (prob.getOutputJobSequenceItemId().contains(stack.get(j).getId())) {
-                            containsOutputItems = true;
-                            if (highestValueInStack <= prob.getOutputJobSequenceItemId().indexOf(stack.get(j).getId())) {
-                                highestValueInStack = prob.getOutputJobSequenceItemId().indexOf(stack.get(j).getId());
 
                             }
                         }
-                    }
-                    if (containsOutputItems) {
-                        if (highestValue < highestValueInStack) {
-                            highestValue = highestValueInStack;
-                            highestValueCoord.setX(x);
-                            highestValueCoord.setY(y);
-                        }
                     } else {
-                        Coordinaat newcoord = new Coordinaat(x, y);
-
-                        moveItem(item, newcoord);
-                        return stack;
+                        validStack = true;
                     }
+                    if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                        boolean containsOutputItems = false;
+                        int highestValueInStack = Integer.MIN_VALUE;
+
+                        for (int j = stack.size() - 1; j >= 0; j--) {
+                            if (prob.getOutputJobSequenceItemId().contains(stack.get(j).getId())) {
+                                containsOutputItems = true;
+                                if (highestValueInStack <= prob.getOutputJobSequenceItemId().indexOf(stack.get(j).getId())) {
+                                    highestValueInStack = prob.getOutputJobSequenceItemId().indexOf(stack.get(j).getId());
+
+                                }
+                            }
+                        }
+                        if (containsOutputItems) {
+                            if (highestValue < highestValueInStack) {
+                                highestValue = highestValueInStack;
+                                highestValueCoord.setX(x);
+                                highestValueCoord.setY(y);
+                            }
+                        } else {
+                            Coordinaat newcoord = new Coordinaat(x, y);
+
+                            moveItem(item, newcoord);
+                            return stack;
+                        }
+                    }
+
                 }
 
             }
-
         }
         moveItem(item, highestValueCoord);
 
