@@ -39,8 +39,9 @@ public class Main {
             e.printStackTrace();
         }
         long curt = System.currentTimeMillis();
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j + i <= 20; j++) {
+        for (int i = 0; i < 25; i++) {
+
+            for (int j = 0; j + i <= 25; j++) {
                 offsetEdge.add(new Coordinaat(i + 1, j + 1));
                 offsetCenter.add(new Coordinaat(i - 5, j - 5));
             }
@@ -48,7 +49,6 @@ public class Main {
         offsetEdge.sort(null);
         offsetCenter.sort(null);
         layoutX = prob.isGeschrankt() ? (((prob.getMaxX() + prob.getMinX()) / 10) * 2) : ((prob.getMaxX() + prob.getMinX()) / 10);
-        System.out.println(layoutX);
 
         layoutY = prob.getMaxY() / 10;
         storage = new ArrayList[layoutX][layoutY];
@@ -72,8 +72,6 @@ public class Main {
         // outputLog.add(prob.getGantries().get(0).toLog());
         for (Job job : prob.getOutputJobSequence()) {
             if (hashMap.containsKey(job.getItem())) {
-                System.out.println(hashMap.get(job.getItem()));
-                System.out.println(job.getItem());
                 getFromStacked(getStack(hashMap.get(job.getItem())), job.getItem(), true);
                 moveItemToOutput(job.getItem());
             } else {
@@ -122,9 +120,6 @@ public class Main {
     }
 
     private static void moveItemToOutput(Item item) {
-        if (item.getId() == 2591) {
-            System.out.println();
-        }
         moveItem(item, prob.getOutputSlotCoordinaat());
         output.add(item);
 
@@ -195,9 +190,6 @@ public class Main {
 
 
     private static void moveItemCloseToExit(Item item) {
-        if (item.getId() == 2591) {
-            System.out.println();
-        }
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
         for (int i = 0; i < offsetEdge.size(); i++) {
@@ -205,8 +197,6 @@ public class Main {
             int x = layoutX - offsetEdge.get(i).getX();
             if (isValidYValue(y)) {
                 ArrayList<Item> stack = storage[x][y];
-                System.out.println(stack.size() < (prob.isGeschrankt() ? 2 : 4));
-                System.out.println((prob.isGeschrankt() ? 2 : 4));
                 boolean oddEven = (x & 1) == 0; //Even=true odd=False
                 boolean validStack = false;
                 if (prob.isGeschrankt()) {
@@ -285,14 +275,10 @@ public class Main {
         timer = timer + prob.getPickupPlaceDuration();
         prob.getGantries().get(0).setItem(null);
         //TODO time+log
-        if (item.getId() == 2591) {
-            System.out.println();
-        }
         hashMap.put(item, coord);
     }
 
     public static ArrayList<Item> getStack(Coordinaat coordinaat) {
-        System.out.println(coordinaat.toString());
         int x;
         int y;
         x = coordinaat.getX();
@@ -304,9 +290,6 @@ public class Main {
 
     public static void getFromStacked(ArrayList<Item> stacked, Item item, boolean root) {
         boolean found = false;
-        if(item.getId()==789){
-            System.out.println();
-        }
         if (prob.isGeschrankt()) {
             Coordinaat c = hashMap.get(item);
             boolean oddEven = (c.getX() & 1) == 0; //Even=true odd=False
@@ -314,9 +297,6 @@ public class Main {
             if (oddEven) {
                 if (isValidXValue(c.getX() - 1)) {
                     ArrayList<Item> stack = storage[c.getX() - 1][c.getY()];
-                    System.out.println(stack.toString());
-                    System.out.println(stacked.toString());
-                    System.out.println(item);
                     if (stack.size() > stacked.indexOf(item)) {
                         getFromStacked(storage[c.getX() - 1][c.getY()], storage[c.getX() - 1][c.getY()].get(stacked.indexOf(item)), false);
                     }
@@ -337,9 +317,6 @@ public class Main {
                 }
                 if (isValidXValue(c.getX() + 1)) {
                     ArrayList<Item> stack = storage[c.getX() + 1][c.getY()];
-                    System.out.println(stack.toString());
-                    System.out.println(stacked.toString());
-                    System.out.println(item);
                     if (stack.size() > stacked.indexOf(item)+1) {
                         getFromStacked(storage[c.getX() + 1][c.getY()], storage[c.getX() + 1][c.getY()].get(stacked.indexOf(item) + 1), false);
                     }
@@ -373,9 +350,6 @@ public class Main {
     }
 
     private static ArrayList<Item> findNearestStack(Coordinaat coord, Item item) {
-        if (item.getId() == 2008) {
-            System.out.println();
-        }
         boolean found = false;
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
