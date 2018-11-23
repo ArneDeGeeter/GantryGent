@@ -46,7 +46,7 @@ public class Problem {
     }
 
     private boolean geschrankt;
-    private boolean doubleGantry;
+    private final boolean doubleGantry;
 
 
     public Problem(int minX, int maxX, int minY, int maxY, int maxLevels,
@@ -69,6 +69,8 @@ public class Problem {
         this.pickupPlaceDuration = pickupPlaceDuration;
         this.geschrankt = aTrue;
         this.doubleGantry = gantries.size() == 2;
+        System.out.println(gantries.size()==2);
+        System.out.println(doubleGantry);
 
     }
 

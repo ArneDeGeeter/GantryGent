@@ -29,7 +29,7 @@ public class Main {
         File file = new File(args[0]);
         String outputFileName = args[1];
 
-
+        System.out.println();
         hashMap = new HashMap<>();
         try {
             prob = Problem.fromJson(file);
@@ -83,6 +83,7 @@ public class Main {
                     if (prob.getInputJobSequence().get(0).getItem().getId() == job.getItem().getId()) {
 
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
+                        System.out.println(prob.isDoubleGantry());
                         if (prob.isDoubleGantry()) {
                             findNearestStack(new Coordinaat(50, 5), job.getItem());
                             moveItemToOutput(job.getItem());
