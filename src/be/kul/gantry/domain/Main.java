@@ -81,10 +81,14 @@ public class Main {
             } else {
                 while (!job.isFinished()) {
                     if (prob.getInputJobSequence().get(0).getItem().getId() == job.getItem().getId()) {
-                        hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
 
-                        moveItemToOutput(job.getItem());
-                        output.add(job.getItem());
+                        hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
+                        if (prob.isDoubleGantry()) {
+                            findNearestStack(new Coordinaat(50, 5), job.getItem());
+                        } else {
+                            moveItemToOutput(job.getItem());
+                        }
+                            output.add(job.getItem());
                         prob.getInputJobSequence().remove(0);
 
                         job.setFinished(true);
@@ -123,6 +127,9 @@ public class Main {
         System.out.println(output);
     }
 
+    private static void moveItemToCenter(Item item) {
+    }
+
     private static void moveItemToOutput(Item item) {
         moveItem(item, prob.getOutputSlotCoordinaat());
         output.add(item);
@@ -130,9 +137,6 @@ public class Main {
     }
 
     private static void moveItemCloseToEntrance(Item item) {
-        if (item.getId() == 2600) {
-            System.out.println();
-        }
         int highestValue = Integer.MIN_VALUE;
         Coordinaat highestValueCoord = new Coordinaat(-1, -1);
         for (int i = 0; i < offsetEdge.size(); i++) {
@@ -254,8 +258,7 @@ public class Main {
 
     }
 
-    //TODO: Dubbele kranen
-    private static void moveItem(Item item, Coordinaat coord) {
+    private static void moveItemSingleGantry(Item item, Coordinaat coord, Gantry gantry) {
         Coordinaat c = null;
         if (hashMap.containsKey(item)) {
             c = hashMap.get(item);
@@ -264,22 +267,37 @@ public class Main {
             }
 
         }
-        outputLog.add(prob.getGantries().get(0).toLog());
-        timer = timer + prob.getGantries().get(0).moveGantry(c);
-        outputLog.add(prob.getGantries().get(0).toLog());
+        outputLog.add(gantry.toLog());
+        timer = timer + gantry.moveGantry(c);
+        outputLog.add(gantry.toLog());
         timer = timer + prob.getPickupPlaceDuration();
-        prob.getGantries().get(0).setItem(item);
-        outputLog.add(prob.getGantries().get(0).toLog());
+        gantry.setItem(item);
+        outputLog.add(gantry.toLog());
 
         if (isValidXValue(coord.getX()) && isValidYValue(coord.getY())) {
             ArrayList<Item> stack = storage[coord.getX()][coord.getY()];
             stack.add(item);
         }
-        timer = timer + prob.getGantries().get(0).moveGantry(coord);
-        outputLog.add(prob.getGantries().get(0).toLog());
+        timer = timer + gantry.moveGantry(coord);
+        outputLog.add(gantry.toLog());
         timer = timer + prob.getPickupPlaceDuration();
-        prob.getGantries().get(0).setItem(null);
+        gantry.setItem(null);
         hashMap.put(item, coord);
+
+    }
+
+
+    //TODO: Dubbele kranen
+    private static void moveItem(Item item, Coordinaat coord) {
+        if (prob.getGantries().size() == 1) {
+            moveItemSingleGantry(item, coord, prob.getGantries().get(0));
+        } else {
+            if (hashMap.containsKey(item)) {
+                if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
+                    moveItemSingleGantry(item, coord, prob.getGantries().get(0));
+                }
+            }
+        }
     }
 
     public static ArrayList<Item> getStack(Coordinaat coordinaat) {
