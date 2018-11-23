@@ -87,7 +87,7 @@ public class Main {
                             findNearestStack(new Coordinaat(50, 5), job.getItem());
                             moveItemToOutput(job.getItem());
                         } else {
-                            
+                            System.out.println();
                             moveItemToOutput(job.getItem());
                         }
                         output.add(job.getItem());
