@@ -38,7 +38,7 @@ public class Problem {
     }
 
     public boolean isDoubleGantry() {
-        return geschrankt;
+        return doubleGantry;
     }
 
     public void setGeschrankt(boolean geschrankt) {

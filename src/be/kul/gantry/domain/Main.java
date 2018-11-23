@@ -23,13 +23,13 @@ public class Main {
     static ArrayList<Item> output = new ArrayList<>();
     static ArrayList<String> outputLog = new ArrayList<>();
     public static double timer = 0;
+    public static double timer2 = 0;
     public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
         File file = new File(args[0]);
         String outputFileName = args[1];
 
-        System.out.println();
         hashMap = new HashMap<>();
         try {
             prob = Problem.fromJson(file);
@@ -38,6 +38,7 @@ public class Main {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        System.out.println(prob.isDoubleGantry());
         long curt = System.currentTimeMillis();
         for (int i = 0; i < 25; i++) {
 
@@ -298,10 +299,16 @@ public class Main {
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
-
                     moveItemSingleGantry(item, coord, prob.getGantries().get(0));
+                    
+                    timer = timer + prob.getGantries().get(0).moveGantry(prob.getInputSlotCoordinaat());
+                    outputLog.add(prob.getGantries().get(0).toLog());
+
+
                 } else {
+                    timer2=timer;
                     moveItemSingleGantry(item, coord, prob.getGantries().get(1));
+
 
                 }
             }
