@@ -42,8 +42,12 @@ public class Main {
         for (int i = 0; i < 25; i++) {
 
             for (int j = 0; j + i <= 25; j++) {
-                offsetEdge.add(new Coordinaat(i + 1, j + 1));
-                offsetCenter.add(new Coordinaat(i - 5, j - 5));
+                if (isValidYValue(Math.abs(j + 1))) {
+                    offsetEdge.add(new Coordinaat(i + 1, j + 1));
+                }
+                if (isValidYValue(Math.abs(j - 5))) {
+                    offsetCenter.add(new Coordinaat(i - 5, j - 5));
+                }
             }
         }
         offsetEdge.sort(null);
@@ -126,7 +130,7 @@ public class Main {
     }
 
     private static void moveItemCloseToEntrance(Item item) {
-        if(item.getId()==2600){
+        if (item.getId() == 2600) {
             System.out.println();
         }
         int highestValue = Integer.MIN_VALUE;
@@ -250,6 +254,7 @@ public class Main {
 
     }
 
+    //TODO: Dubbele kranen
     private static void moveItem(Item item, Coordinaat coord) {
         Coordinaat c = null;
         if (hashMap.containsKey(item)) {
@@ -274,7 +279,6 @@ public class Main {
         outputLog.add(prob.getGantries().get(0).toLog());
         timer = timer + prob.getPickupPlaceDuration();
         prob.getGantries().get(0).setItem(null);
-        //TODO time+log
         hashMap.put(item, coord);
     }
 
@@ -311,13 +315,13 @@ public class Main {
             } else {
                 if (isValidXValue(c.getX() - 1)) {
                     ArrayList<Item> stack = storage[c.getX() - 1][c.getY()];
-                    if (stack.size() > stacked.indexOf(item)+1) {
+                    if (stack.size() > stacked.indexOf(item) + 1) {
                         getFromStacked(storage[c.getX() - 1][c.getY()], storage[c.getX() - 1][c.getY()].get(stacked.indexOf(item) + 1), false);
                     }
                 }
                 if (isValidXValue(c.getX() + 1)) {
                     ArrayList<Item> stack = storage[c.getX() + 1][c.getY()];
-                    if (stack.size() > stacked.indexOf(item)+1) {
+                    if (stack.size() > stacked.indexOf(item) + 1) {
                         getFromStacked(storage[c.getX() + 1][c.getY()], storage[c.getX() + 1][c.getY()].get(stacked.indexOf(item) + 1), false);
                     }
                 }
