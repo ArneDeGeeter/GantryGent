@@ -310,7 +310,7 @@ public class Main {
                     if(item.getId()==2627){
                         System.out.println();
                     }
-                    if(lastTimer2 ==timer){
+                    if(lastTimer2 ==timer&&lastTimerRelease2>lastTimerRelease1){
                         timer=lastTimerRelease2;
                         lastTimer2=Integer.MIN_VALUE;
                     }
@@ -333,6 +333,9 @@ public class Main {
 
 
                 } else {
+                    if(item.getId()==2627){
+                        System.out.println();
+                    }
                     if (timer == lastTimer1) {
                         timer=lastTimerRelease1;
                     }
