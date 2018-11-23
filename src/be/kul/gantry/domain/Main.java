@@ -24,6 +24,10 @@ public class Main {
     static ArrayList<String> outputLog = new ArrayList<>();
     public static double timer = 0;
     public static double timer2 = 0;
+    public static double lastTimer1 = 0;
+    public static double lastTimerRelease1 = 0;
+    public static double lastTimerRelease2 = 0;
+    public static double lastTimer2 = 0;
     public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -84,12 +88,10 @@ public class Main {
                     if (prob.getInputJobSequence().get(0).getItem().getId() == job.getItem().getId()) {
 
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
-                        System.out.println(prob.isDoubleGantry());
                         if (prob.isDoubleGantry()) {
                             findNearestStack(new Coordinaat(50, 5), job.getItem());
                             moveItemToOutput(job.getItem());
                         } else {
-                            System.out.println();
                             moveItemToOutput(job.getItem());
                         }
                         output.add(job.getItem());
@@ -100,7 +102,8 @@ public class Main {
 
                     } else if (prob.getOutputJobSequenceItemId().contains(prob.getInputJobSequence().get(0).getItem().getId())) {
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
-                        moveItemCloseToExit(prob.getInputJobSequence().get(0).getItem());
+                        findNearestStack(new Coordinaat(50, 5), prob.getInputJobSequence().get(0).getItem());
+
                         prob.getInputJobSequence().remove(0);
 
 
@@ -114,7 +117,15 @@ public class Main {
                 }
             }
         }
+        while (!prob.getInputJobSequence().isEmpty()) {
+            hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
+            moveItemCloseToEntrance(prob.getInputJobSequence().get(0).getItem());
+            prob.getInputJobSequence().remove(0);
+
+
+        }
         outputLog.add(prob.getGantries().get(0).toLog());
+        outputLog.add(prob.getGantries().get(1).toLog());
 
         System.out.println(System.currentTimeMillis() - curt);
         try {
@@ -291,23 +302,36 @@ public class Main {
 
     //TODO: Dubbele kranen
     private static void moveItem(Item item, Coordinaat coord) {
-        if(coord.equals(prob.getOutputSlotCoordinaat())){
-            System.out.println();
-        }
         if (prob.getGantries().size() == 1) {
             moveItemSingleGantry(item, coord, prob.getGantries().get(0));
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
+                    if(lastTimer2 ==timer){
+                        timer=
+                    }
+
                     moveItemSingleGantry(item, coord, prob.getGantries().get(0));
-                    
-                    timer = timer + prob.getGantries().get(0).moveGantry(prob.getInputSlotCoordinaat());
                     outputLog.add(prob.getGantries().get(0).toLog());
 
 
+                    lastTimerRelease1 = timer;
+                    timer = timer + prob.getGantries().get(0).moveGantry(prob.getInputSlotCoordinaat());
+                    outputLog.add(prob.getGantries().get(0).toLog());
+                    lastTimer1 = timer;
+
                 } else {
-                    timer2=timer;
+                    if (timer == lastTimer1) {
+                        timer=lastTimerRelease1;
+                    }
+
                     moveItemSingleGantry(item, coord, prob.getGantries().get(1));
+
+                    lastTimer2=timer;
+
+                    timer=lastTimer1>timer?lastTimer1:timer;
+
+
 
 
                 }
