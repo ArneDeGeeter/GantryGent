@@ -26,8 +26,8 @@ public class Main {
     public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
-        File file = new File("1_10_100_4_TRUE_65_50_50.json");
-        String outputFileName = "output.txt";
+        File file = new File(args[0]);
+        String outputFileName = args[1];
 
 
         hashMap = new HashMap<>();
