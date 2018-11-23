@@ -307,12 +307,20 @@ public class Main {
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
-                    if(lastTimer2 ==timer){
-                        timer=
+                    if(item.getId()==2627){
+                        System.out.println();
                     }
+                    if(lastTimer2 ==timer){
+                        timer=lastTimerRelease2;
+                        lastTimer2=Integer.MIN_VALUE;
+                    }
+
 
                     moveItemSingleGantry(item, coord, prob.getGantries().get(0));
                     outputLog.add(prob.getGantries().get(0).toLog());
+
+
+
 
 
                     lastTimerRelease1 = timer;
@@ -320,11 +328,15 @@ public class Main {
                     outputLog.add(prob.getGantries().get(0).toLog());
                     lastTimer1 = timer;
 
+                    timer=lastTimer2>timer?lastTimer2:timer;
+
+
+
                 } else {
                     if (timer == lastTimer1) {
                         timer=lastTimerRelease1;
                     }
-
+                    lastTimerRelease2=timer;
                     moveItemSingleGantry(item, coord, prob.getGantries().get(1));
 
                     lastTimer2=timer;
