@@ -37,11 +37,16 @@ public class Problem {
         return geschrankt;
     }
 
+    public boolean isDoubleGantry() {
+        return geschrankt;
+    }
+
     public void setGeschrankt(boolean geschrankt) {
         this.geschrankt = geschrankt;
     }
 
     private boolean geschrankt;
+    private boolean doubleGantry;
 
 
     public Problem(int minX, int maxX, int minY, int maxY, int maxLevels,
@@ -63,6 +68,7 @@ public class Problem {
         this.safetyDistance = gantrySafetyDist;
         this.pickupPlaceDuration = pickupPlaceDuration;
         this.geschrankt = aTrue;
+        this.doubleGantry = gantries.size() == 2;
     }
 
     public List<Integer> getInputJobSequenceItemId() {

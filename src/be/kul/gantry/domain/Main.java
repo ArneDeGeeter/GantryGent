@@ -85,10 +85,11 @@ public class Main {
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
                         if (prob.isDoubleGantry()) {
                             findNearestStack(new Coordinaat(50, 5), job.getItem());
+                            moveItemToOutput(job.getItem());
                         } else {
                             moveItemToOutput(job.getItem());
                         }
-                            output.add(job.getItem());
+                        output.add(job.getItem());
                         prob.getInputJobSequence().remove(0);
 
                         job.setFinished(true);
@@ -127,8 +128,6 @@ public class Main {
         System.out.println(output);
     }
 
-    private static void moveItemToCenter(Item item) {
-    }
 
     private static void moveItemToOutput(Item item) {
         moveItem(item, prob.getOutputSlotCoordinaat());
@@ -289,12 +288,19 @@ public class Main {
 
     //TODO: Dubbele kranen
     private static void moveItem(Item item, Coordinaat coord) {
+        if(coord.equals(prob.getOutputSlotCoordinaat())){
+            System.out.println();
+        }
         if (prob.getGantries().size() == 1) {
             moveItemSingleGantry(item, coord, prob.getGantries().get(0));
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
+
                     moveItemSingleGantry(item, coord, prob.getGantries().get(0));
+                } else {
+                    moveItemSingleGantry(item, coord, prob.getGantries().get(1));
+
                 }
             }
         }
