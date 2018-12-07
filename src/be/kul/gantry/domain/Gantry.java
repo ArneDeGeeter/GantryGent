@@ -101,31 +101,45 @@ public class Gantry {
     }
 
     public double moveGantry(Coordinaat coord) {
-      /*  if (otherGantry == null) {
-            if (this.equals(Main.prob.getGantries().get(0))) {
-                otherGantry = Main.prob.getGantries().get(1);
-            } else {
-                otherGantry = Main.prob.getGantries().get(0);
-            }
-        }**/
-        double startTime = Main.timer;
         double movingTime = calculateTime(coord);
-        double endTime = startTime + movingTime;
-       /* MovementLog moveLog = new MovementLog(startTime, endTime, new Coordinaat(this.startX, this.startY), coord);
-        for (int i = 0; i < otherGantry.movementLogArrayList.size(); i++) {
-            int result;
-            if(this.id==0){
-                result=moveLog.compareTo(otherGantry.movementLogArrayList.get(i));
-            }else{
-                result=otherGantry.movementLogArrayList.get(i).compareTo(moveLog);
+        double fqds = Main.timer;
+        if (Main.timer > 200 && Main.timer < 500) {
+            System.out.println();
+        }
+
+        if (Main.prob.getGantries().size() != 1) {
+            if (otherGantry == null) {
+                if (this.equals(Main.prob.getGantries().get(0))) {
+                    otherGantry = Main.prob.getGantries().get(1);
+                } else {
+                    otherGantry = Main.prob.getGantries().get(0);
+                }
+            }
+            double startTime = Main.timer;
+            double endTime = startTime + movingTime;
+
+            MovementLog moveLog = new MovementLog(startTime, endTime, new Coordinaat(this.startX, this.startY), coord);
+            for (int i = 0; i < otherGantry.movementLogArrayList.size(); i++) {
+                int result;
+                if (this.id == 0) {
+                    result = moveLog.compareTo(otherGantry.movementLogArrayList.get(i));
+                } else {
+                    result = otherGantry.movementLogArrayList.get(i).compareTo(moveLog);
+
+                }
+                if (result == 0) {
+                    System.out.println(moveLog.toString());
+                    System.out.println(otherGantry.movementLogArrayList.get(i).toString());
+                    /*Main.outputLog.add(this.id + ";" + otherGantry.movementLogArrayList.get(i).getEndtime() + ";"
+                            + (otherGantry.movementLogArrayList.get(i).getEindCoordinaat().xValue() - Main.prob.getSafetyDistance())
+                            + ";" + this.startY + ";"
+                            + ((this.item == null) ? "null" : this.item.getId()));*/
+                movingTime=movingTime+otherGantry.movementLogArrayList.get(i).getEndtime()-Main.timer;
+                }
 
             }
-
+            movementLogArrayList.add(moveLog);
         }
-        for (MovementLog log : otherGantry.movementLogArrayList) {
-
-        }
-        movementLogArrayList.add(moveLog);*/
         this.startX = coord.xValue();
         this.startY = coord.yValue();
         return movingTime;

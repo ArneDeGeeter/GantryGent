@@ -39,10 +39,6 @@ public class MovementLog implements Comparable {
         MovementLog that = (MovementLog) o;
         if (this.starttime > that.endtime)
             return -1;
-        if (this.endtime > that.starttime)
-            return 1;
-        if (that.endtime > this.starttime)
-            return -1;
         if (that.starttime > this.endtime)
             return -1;
         if (this.eindCoordinaat.getX()>that.eindCoordinaat.getX()){
@@ -66,5 +62,15 @@ public class MovementLog implements Comparable {
     public int hashCode() {
 
         return Objects.hash(starttime, endtime, startCoordinaat, eindCoordinaat);
+    }
+
+    @Override
+    public String toString() {
+        return "MovementLog{" +
+                "starttime=" + starttime +
+                ", endtime=" + endtime +
+                ", startCoordinaat=" + startCoordinaat +
+                ", eindCoordinaat=" + eindCoordinaat +
+                '}';
     }
 }
