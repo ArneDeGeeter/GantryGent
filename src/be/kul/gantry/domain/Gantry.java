@@ -13,8 +13,9 @@ public class Gantry {
     private final int xMin, xMax;
     private int startX, startY;
     private final double xSpeed, ySpeed;
-    private HashMap<Double,Coordinaat> logfile=new HashMap<>();
-    private ArrayList<MovementLog> movementLogArrayList=new ArrayList();
+    private HashMap<Double, Coordinaat> logfile = new HashMap<>();
+    private ArrayList<MovementLog> movementLogArrayList = new ArrayList();
+    Gantry otherGantry;
 
     public Item getItem() {
         return item;
@@ -100,10 +101,31 @@ public class Gantry {
     }
 
     public double moveGantry(Coordinaat coord) {
-        double startTime=Main.timer;
+      /*  if (otherGantry == null) {
+            if (this.equals(Main.prob.getGantries().get(0))) {
+                otherGantry = Main.prob.getGantries().get(1);
+            } else {
+                otherGantry = Main.prob.getGantries().get(0);
+            }
+        }**/
+        double startTime = Main.timer;
         double movingTime = calculateTime(coord);
-        double endTime=startTime+movingTime;
+        double endTime = startTime + movingTime;
+       /* MovementLog moveLog = new MovementLog(startTime, endTime, new Coordinaat(this.startX, this.startY), coord);
+        for (int i = 0; i < otherGantry.movementLogArrayList.size(); i++) {
+            int result;
+            if(this.id==0){
+                result=moveLog.compareTo(otherGantry.movementLogArrayList.get(i));
+            }else{
+                result=otherGantry.movementLogArrayList.get(i).compareTo(moveLog);
 
+            }
+
+        }
+        for (MovementLog log : otherGantry.movementLogArrayList) {
+
+        }
+        movementLogArrayList.add(moveLog);*/
         this.startX = coord.xValue();
         this.startY = coord.yValue();
         return movingTime;
@@ -117,7 +139,7 @@ public class Gantry {
     }
 
     public String toLog() {
-        logfile.put(Main.timer,new Coordinaat(this.startX,this.startY));
+        logfile.put(Main.timer, new Coordinaat(this.startX, this.startY));
         return this.id + ";" + Main.timer + ";" + this.startX + ";" + this.startY + ";"
                 + ((this.item == null) ? "null" : this.item.getId());
     }

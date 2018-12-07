@@ -45,9 +45,9 @@ public class Main {
         }
         System.out.println(prob.isDoubleGantry());
         long curt = System.currentTimeMillis();
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 50; i++) {
 
-            for (int j = 0; j + i <= 25; j++) {
+            for (int j = 0; j + i <= 50; j++) {
                 if (isValidYValue(Math.abs(j + 1))) {
                     offsetEdge.add(new Coordinaat(i + 1, j + 1));
                 }
@@ -126,7 +126,7 @@ public class Main {
 
         }
         outputLog.add(prob.getGantries().get(0).toLog());
-      //  outputLog.add(prob.getGantries().get(1).toLog());
+        //  outputLog.add(prob.getGantries().get(1).toLog());
 
         System.out.println(System.currentTimeMillis() - curt);
         try {
@@ -179,7 +179,9 @@ public class Main {
                 } else {
                     validStack = true;
                 }
-                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                if (validStack &&
+                        stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
+                                (int) (prob.getMaxLevels() / 2) : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -240,7 +242,8 @@ public class Main {
                 } else {
                     validStack = true;
                 }
-                if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                if (validStack && stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
+                        (int) (prob.getMaxLevels() / 2) : 4)) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -456,7 +459,8 @@ public class Main {
                     } else {
                         validStack = true;
                     }
-                    if (validStack && stack.size() < (prob.isGeschrankt() ? 2 : 4)) {
+                    if (validStack && stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
+                            (int) (prob.getMaxLevels() / 2) : 4)) {
                         boolean containsOutputItems = false;
                         int highestValueInStack = Integer.MIN_VALUE;
 
