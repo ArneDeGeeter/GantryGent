@@ -28,6 +28,7 @@ public class Main {
     public static double lastTimerRelease1 = 0;
     public static double lastTimerRelease2 = 0;
     public static double lastTimer2 = 0;
+    public static double checkTimer2 = 0;
     public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -125,7 +126,7 @@ public class Main {
 
         }
         outputLog.add(prob.getGantries().get(0).toLog());
-        outputLog.add(prob.getGantries().get(1).toLog());
+      //  outputLog.add(prob.getGantries().get(1).toLog());
 
         System.out.println(System.currentTimeMillis() - curt);
         try {
@@ -294,7 +295,9 @@ public class Main {
         timer = timer + gantry.moveGantry(coord);
         outputLog.add(gantry.toLog());
         timer = timer + prob.getPickupPlaceDuration();
+
         gantry.setItem(null);
+        outputLog.add(gantry.toLog());
         hashMap.put(item, coord);
 
     }
@@ -307,12 +310,12 @@ public class Main {
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
-                    if(item.getId()==2627){
+                    if (item.getId() == 2627) {
                         System.out.println();
                     }
-                    if(lastTimer2 ==timer&&lastTimerRelease2>lastTimerRelease1){
-                        timer=lastTimerRelease2;
-                        lastTimer2=Integer.MIN_VALUE;
+                    if (lastTimer2 == timer && lastTimerRelease2 > lastTimerRelease1) {
+                        timer = lastTimerRelease2;
+                        lastTimer2 = Integer.MIN_VALUE;
                     }
 
 
@@ -320,33 +323,27 @@ public class Main {
                     outputLog.add(prob.getGantries().get(0).toLog());
 
 
-
-
-
                     lastTimerRelease1 = timer;
                     timer = timer + prob.getGantries().get(0).moveGantry(prob.getInputSlotCoordinaat());
                     outputLog.add(prob.getGantries().get(0).toLog());
                     lastTimer1 = timer;
 
-                    timer=lastTimer2>timer?lastTimer2:timer;
-
+                    timer = lastTimer2 > timer ? lastTimer2 : timer;
 
 
                 } else {
-                    if(item.getId()==2627){
+                    if (item.getId() == 2600) {
                         System.out.println();
                     }
-                    if (timer == lastTimer1) {
-                        timer=lastTimerRelease1;
+                    if (timer == lastTimer1 && lastTimerRelease1 > checkTimer2) {
+                        timer = lastTimerRelease1;
                     }
-                    lastTimerRelease2=timer;
+                    lastTimerRelease2 = timer;
                     moveItemSingleGantry(item, coord, prob.getGantries().get(1));
+                    checkTimer2 = timer;
+                    lastTimer2 = timer;
 
-                    lastTimer2=timer;
-
-                    timer=lastTimer1>timer?lastTimer1:timer;
-
-
+                    timer = lastTimer1 > timer ? lastTimer1 : timer;
 
 
                 }

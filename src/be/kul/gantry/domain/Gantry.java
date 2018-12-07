@@ -1,5 +1,9 @@
 package be.kul.gantry.domain;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by Wim on 27/04/2015.
  */
@@ -9,6 +13,8 @@ public class Gantry {
     private final int xMin, xMax;
     private int startX, startY;
     private final double xSpeed, ySpeed;
+    private HashMap<Double,Coordinaat> logfile=new HashMap<>();
+    private ArrayList<MovementLog> movementLogArrayList=new ArrayList();
 
     public Item getItem() {
         return item;
@@ -94,7 +100,10 @@ public class Gantry {
     }
 
     public double moveGantry(Coordinaat coord) {
+        double startTime=Main.timer;
         double movingTime = calculateTime(coord);
+        double endTime=startTime+movingTime;
+
         this.startX = coord.xValue();
         this.startY = coord.yValue();
         return movingTime;
@@ -108,6 +117,7 @@ public class Gantry {
     }
 
     public String toLog() {
+        logfile.put(Main.timer,new Coordinaat(this.startX,this.startY));
         return this.id + ";" + Main.timer + ";" + this.startX + ";" + this.startY + ";"
                 + ((this.item == null) ? "null" : this.item.getId());
     }
