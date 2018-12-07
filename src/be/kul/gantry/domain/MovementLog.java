@@ -37,7 +37,7 @@ public class MovementLog implements Comparable {
         MovementLog that = (MovementLog) o;
         if(this.starttime>that.endtime)
             return -1;
-        if(this.endtime     )
+        if(this.endtime)
     }
 
     @Override
