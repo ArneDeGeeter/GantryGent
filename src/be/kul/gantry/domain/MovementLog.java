@@ -1,5 +1,7 @@
 package be.kul.gantry.domain;
 
+import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
+
 import java.util.Objects;
 
 public class MovementLog implements Comparable {
@@ -35,9 +37,19 @@ public class MovementLog implements Comparable {
     public int compareTo(Object o) {
         if (this == o) return 0;
         MovementLog that = (MovementLog) o;
-        if(this.starttime>that.endtime)
+        if (this.starttime > that.endtime)
             return -1;
-        if(this.endtime)
+        if (this.endtime > that.starttime)
+            return 1;
+        if (that.endtime > this.starttime)
+            return -1;
+        if (that.starttime > this.endtime)
+            return -1;
+        if (this.eindCoordinaat.getX()>that.eindCoordinaat.getX()){
+            return 0;
+        }
+        return 10;
+
     }
 
     @Override
