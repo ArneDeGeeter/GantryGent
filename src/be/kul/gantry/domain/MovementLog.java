@@ -45,6 +45,7 @@ public class MovementLog implements Comparable {
             return 0;
         }
         return 10;
+
     }
 
     @Override

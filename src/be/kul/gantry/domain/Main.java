@@ -46,7 +46,6 @@ public class Main {
         System.out.println(prob.isDoubleGantry());
         long curt = System.currentTimeMillis();
         for (int i = 0; i < 50; i++) {
-
             for (int j = 0; j + i <= 50; j++) {
                 if (isValidYValue(Math.abs(j + 1))) {
                     offsetEdge.add(new Coordinaat(i + 1, j + 1));
@@ -90,8 +89,11 @@ public class Main {
 
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
                         if (prob.isDoubleGantry()) {
-                            findNearestStack(new Coordinaat(50, 5), job.getItem());
+                            int middenX=prob.isGeschrankt() ? ((prob.getMaxX() + prob.getMinX())/20) : ((prob.getMaxX() + prob.getMinX()) / 10);
+                            int middenY=prob.getMaxY()/20;
+                            findNearestStack(new Coordinaat(middenX, middenY), job.getItem());
                             moveItemToOutput(job.getItem());
+
                         } else {
                             moveItemToOutput(job.getItem());
                         }
@@ -180,8 +182,8 @@ public class Main {
                     validStack = true;
                 }
                 if (validStack &&
-                        stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
-                                (int) (prob.getMaxLevels() / 2) : 4)) {
+                        stack.size() < (prob.isGeschrankt() ? (oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
+                                (int) (prob.getMaxLevels() / 2)) : prob.getMaxLevels())) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
