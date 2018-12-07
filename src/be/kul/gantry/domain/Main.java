@@ -105,6 +105,8 @@ public class Main {
 
                     } else if (prob.getOutputJobSequenceItemId().contains(prob.getInputJobSequence().get(0).getItem().getId())) {
                         hashMap.put(prob.getInputJobSequence().get(0).getItem(), prob.getInputSlotCoordinaat());
+                        int middenX=prob.isGeschrankt() ? ((prob.getMaxX() + prob.getMinX())/20) : ((prob.getMaxX() + prob.getMinX()) / 10);
+                        int middenY=prob.getMaxY()/20;
                         findNearestStack(new Coordinaat(50, 5), prob.getInputJobSequence().get(0).getItem());
 
                         prob.getInputJobSequence().remove(0);
