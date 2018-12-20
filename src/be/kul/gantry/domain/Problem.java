@@ -69,9 +69,6 @@ public class Problem {
         this.pickupPlaceDuration = pickupPlaceDuration;
         this.geschrankt = aTrue;
         this.doubleGantry = gantries.size() == 2;
-        System.out.println(gantries.size() == 2);
-        System.out.println(doubleGantry);
-
     }
 
     public List<Integer> getInputJobSequenceItemId() {

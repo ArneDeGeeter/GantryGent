@@ -103,9 +103,6 @@ public class Gantry {
     public double moveGantry(Coordinaat coord) {
         double movingTime = calculateTime(coord);
         double fqds = Main.timer;
-        if (Main.timer > 200 && Main.timer < 500) {
-            System.out.println();
-        }
 
         if (Main.prob.getGantries().size() != 1) {
             if (otherGantry == null) {
@@ -128,13 +125,7 @@ public class Gantry {
 
                 }
                 if (result == 0) {
-                    System.out.println(moveLog.toString());
-                    System.out.println(otherGantry.movementLogArrayList.get(i).toString());
-                    /*Main.outputLog.add(this.id + ";" + otherGantry.movementLogArrayList.get(i).getEndtime() + ";"
-                            + (otherGantry.movementLogArrayList.get(i).getEindCoordinaat().xValue() - Main.prob.getSafetyDistance())
-                            + ";" + this.startY + ";"
-                            + ((this.item == null) ? "null" : this.item.getId()));*/
-                movingTime=movingTime+otherGantry.movementLogArrayList.get(i).getEndtime()-Main.timer;
+                    movingTime = movingTime + otherGantry.movementLogArrayList.get(i).getEndtime() - Main.timer;
                 }
 
             }

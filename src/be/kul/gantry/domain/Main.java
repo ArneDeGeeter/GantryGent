@@ -29,7 +29,6 @@ public class Main {
     public static double lastTimerRelease2 = 0;
     public static double lastTimer2 = 0;
     public static double checkTimer2 = 0;
-    public static ArrayList<Coordinaat> obstructedStacks = new ArrayList<>();
 
     public static void main(String[] args) {
         File file = new File(args[0]);
@@ -43,7 +42,6 @@ public class Main {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(prob.isDoubleGantry());
         long curt = System.currentTimeMillis();
         for (int i = 0; i < 50; i++) {
             for (int j = 0; j + i <= 50; j++) {
@@ -144,7 +142,6 @@ public class Main {
         }
         System.out.println(System.currentTimeMillis() - curt);
 
-        System.out.println(output);
     }
 
 
@@ -247,7 +244,7 @@ public class Main {
                     validStack = true;
                 }
                 if (validStack && stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
-                        (int) (prob.getMaxLevels() / 2) : 4)) {
+                        (int) (prob.getMaxLevels() / 2) : prob.getMaxLevels())) {
                     boolean containsOutputItems = false;
                     int highestValueInStack = Integer.MIN_VALUE;
 
@@ -317,9 +314,6 @@ public class Main {
         } else {
             if (hashMap.containsKey(item)) {
                 if (hashMap.get(item).equals(prob.getInputSlotCoordinaat())) {
-                    if (item.getId() == 2627) {
-                        System.out.println();
-                    }
                     if (lastTimer2 == timer && lastTimerRelease2 > lastTimerRelease1) {
                         timer = lastTimerRelease2;
                         lastTimer2 = Integer.MIN_VALUE;
@@ -339,9 +333,6 @@ public class Main {
 
 
                 } else {
-                    if (item.getId() == 2600) {
-                        System.out.println();
-                    }
                     if (timer == lastTimer1 && lastTimerRelease1 > checkTimer2) {
                         timer = lastTimerRelease1;
                     }
@@ -464,7 +455,7 @@ public class Main {
                         validStack = true;
                     }
                     if (validStack && stack.size() < (prob.isGeschrankt() ? oddEven ? ((int) (prob.getMaxLevels() / 2) + prob.getMaxLevels() % 2) :
-                            (int) (prob.getMaxLevels() / 2) : 4)) {
+                            (int) (prob.getMaxLevels() / 2) : prob.getMaxLevels())) {
                         boolean containsOutputItems = false;
                         int highestValueInStack = Integer.MIN_VALUE;
 
